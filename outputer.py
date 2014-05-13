@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from __future__ import with_statement
 from classes.response_domain_code import ResponseDomainCode
 from classes.response_domain_all import ResponseDomainAll
 from classes.response_unit import ResponseUnit
@@ -8,8 +9,9 @@ from classes.statement_construct import StatementConstruct
 from classes.ifthenelse_construct import IfthenelseConstruct
 
 class Outputer(object):
-	def __init__(self, data):
+	def __init__(self, data, silent=False):
 		self.data = data
+		Outputer.silent = silent
 		self.ids = {}
 		self.question_items = []
 		self.categories = []
@@ -48,14 +50,14 @@ class Outputer(object):
 
 	def write(self, filename):
 		self.resetIDs()
-		print "<-- Opening file: " + filename + " -->"
+		if not Outputer.silent: print "<-- Opening file: " + filename + " -->"
 		with open(filename, 'w') as f:
-			print "<-- Writing to file: " + filename + " -->"
+			if not Outputer.silent: print "<-- Writing to file: " + filename + " -->"
 			f.write('-- SQL file to be loaded into Caddies')
 			f.write('\n')
-			print "<-- Writing question data -->"
+			if not Outputer.silent: print "<-- Writing question data -->"
 			self.writeQuestionData(f)
-			print "<-- Writing sequence data -->"
+			if not Outputer.silent: print "<-- Writing sequence data -->"
 			self.writeSequenceData(f)
 	
 	def writeQuestionData(self,f):
@@ -304,64 +306,3 @@ class Outputer(object):
 								f.write(';\n')
 								break
 					varGrp_val.linked = True
-			
-		#Write all bottom level sequences and associated cc_alls
-		"""for varGrpKey in self.data['variable_groups']:
-			if len(self.data['variable_groups'][varGrpKey].memberGroups) > 0:
-				continue
-			if len(self.data['variable_groups'][varGrpKey].memberVariables) < 1:
-				continue
-			f.write('INSERT INTO cc_sequences (id, textid, created_at, updated_at) VALUES ')
-			f.write('(' + str(self.data['variable_groups'][varGrpKey].sqlID)  + ',' + self.prepareString(self.data['variable_groups'][varGrpKey].textid) + ',"' + str(self.data['variable_groups'][varGrpKey].created_at) + '","' + str(self.data['variable_groups'][varGrpKey].updated_at) + '")')
-			f.write(';\n')
-			self.data['variable_groups'][varGrpKey].inserted = True
-			position = 0
-			for memberVariable in self.data['variable_groups'][varGrpKey].memberVariables:
-				for question in self.data['questions']:
-					if question.ID == memberVariable:
-						self.ids['cc_alls'] += 1
-						position += 1
-						f.write('INSERT INTO cc_alls (id, construct_type, construct_id, created_at, updated_at, parent_id, position, ifbranch) VALUES ')
-						f.write('(' + str(self.ids['cc_alls'])  + ',"CcQuestion",' + str(question.sqlID) + ',"' + str(self.data['variable_groups'][varGrpKey].created_at) + '","' + str(self.data['variable_groups'][varGrpKey].updated_at) + '",' + str(self.data['variable_groups'][varGrpKey].sqlID) + ',' + str(position) + ',"f")')
-						f.write(';\n')
-						for statement in self.statement_constructs:
-							if statement.textid == 's_q' + memberVariable:
-								self.ids['cc_alls'] += 1
-								position += 1
-								f.write('INSERT INTO cc_alls (id, construct_type, construct_id, created_at, updated_at, parent_id, position, ifbranch) VALUES ')
-								f.write('(' + str(self.ids['cc_alls'])  + ',"CcStatement",' + str(statement.sqlID) + ',"' + str(statement.created_at) + '","' + str(statement.updated_at) + '",' + str(self.data['variable_groups'][varGrpKey].sqlID) + ',' + str(position) + ',"f")')
-								f.write(';\n')
-								break
-						break
-			self.data['variable_groups'][varGrpKey].linked = True
-		#Write remaining sequences
-		for varGrpKey in self.data['variable_groups']:
-			if len(self.data['variable_groups'][varGrpKey].memberGroups) < 1:
-				continue
-			f.write('INSERT INTO cc_sequences (id, textid, created_at, updated_at) VALUES ')
-			f.write('(' + str(self.data['variable_groups'][varGrpKey].sqlID)  + ',' + self.prepareString(self.data['variable_groups'][varGrpKey].textid) + ',"' + str(self.data['variable_groups'][varGrpKey].created_at) + '","' + str(self.data['variable_groups'][varGrpKey].updated_at) + '")')
-			f.write(';\n')
-			self.data['variable_groups'][varGrpKey].inserted = True
-			position = 0
-			for memberGroup in self.data['variable_groups'][varGrpKey].memberGroups:
-				for child_varGrpKey in self.data['variable_groups']:
-					child_varGrp = self.data['variable_groups'][child_varGrpKey]
-					if child_varGrp.ID == memberGroup:
-						self.ids['cc_alls'] += 1
-						position += 1
-						f.write('INSERT INTO cc_alls (id, construct_type, construct_id, created_at, updated_at, parent_id, position, ifbranch) VALUES ')
-						f.write('(' + str(self.ids['cc_alls'])  + ',"CcSequence",' + str(child_varGrp.sqlID) + ',"' + str(self.data['variable_groups'][varGrpKey].created_at) + '","' + str(self.data['variable_groups'][varGrpKey].updated_at) + '",' + str(self.data['variable_groups'][varGrpKey].sqlID) + ',' + str(position) + ',"f")')
-						f.write(';\n')
-						self.data['variable_groups'][child_varGrpKey].linked = True
-						break
-		position = 0
-		for varGrpKey in self.data['variable_groups']:
-			if self.data['variable_groups'][varGrpKey].linked:
-				continue
-			position += 1
-			self.ids['cc_alls'] += 1
-			f.write('INSERT INTO cc_alls (id, construct_type, construct_id, created_at, updated_at, parent_id, position, ifbranch) VALUES ')
-			f.write('(' + str(self.ids['cc_alls'])  + ',"CcSequence",' + str(self.data['variable_groups'][varGrpKey].sqlID) + ',"' + str(self.data['variable_groups'][varGrpKey].created_at) + '","' + str(self.data['variable_groups'][varGrpKey].updated_at) + '",1,' + str(position) + ',"f")')
-			f.write(';\n')
-			self.data['variable_groups'][varGrpKey].linked = True"""
-

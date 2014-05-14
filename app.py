@@ -81,6 +81,8 @@ def main(_infile, _outfilename, _np=4, _defaults=False, _silent=False):
 
         parser.output()
 
+        parser.separateInstructions()
+
         parser.validate()
 
         #Initalise outputer to write out the sql file from the data parsed by the parser

@@ -228,6 +228,7 @@ class Parser(object):
 	def getData(self):
 		data = {}
 		data['questions'] = self. questions
+                data['instructions'] = self.instructions
 		data['categories'] = self.categories
 		data['code_schemes'] = self.code_schemes
 		data['code_answers'] = self.code_answers

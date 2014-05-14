@@ -1,11 +1,12 @@
 #!/usr/bin/python
 
 from __future__ import with_statement
+import datetime
+
 from classes.response_domain_code import ResponseDomainCode
 from classes.response_domain_all import ResponseDomainAll
 from classes.response_unit import ResponseUnit
 from classes.question_construct import QuestionConstruct
-from classes.statement_construct import StatementConstruct
 from classes.ifthenelse_construct import IfthenelseConstruct
 
 class Outputer(object):
@@ -61,6 +62,10 @@ class Outputer(object):
 			self.writeSequenceData(f)
 	
 	def writeQuestionData(self,f):
+                for instruction in self.data['instructions']:
+                        f.write('INSERT INTO instructions (id, instruction_text, created_at, updated_at) VALUES ')
+                        f.write('(' + str(instruction.ID)  + ',"' + str(instruction.text) + '","' + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")) + '","' + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")) + '")')
+                        f.write(';\n')
 		prevQuestion = None
 		for question in self.data['questions']:
 			self.ids['question_items'] += 1
@@ -73,13 +78,6 @@ class Outputer(object):
                         f.write(',' + self.prepareString(question.label) + ',"' + str(question.created_at) + '","' + str(question.updated_at) + '",' + str(question.instruction) + ')')
 			f.write(';\n')
 			question.sqlID = self.ids['question_items']
-                        """if question.instruction != None:
-				self.ids['cc_statements'] += 1
-				self.statement_constructs.append(StatementConstruct('s_q' + str(question.ID), question.instruction))
-				self.statement_constructs[-1].sqlID = self.ids['cc_statements']
-				f.write('INSERT INTO cc_statements (id, textid, statement_item, created_at, updated_at) VALUES ')
-				f.write('(' + str(self.statement_constructs[-1].sqlID)  + ',"' + self.statement_constructs[-1].textid + '",' + self.prepareString(self.statement_constructs[-1].statement_item) + ',"' + str(self.statement_constructs[-1].created_at) + '","' + str(self.statement_constructs[-1].updated_at) + '")')
-                                f.write(';\n')"""
 			respUnits = [x for x in self.response_units if x.text == question.respUnit]
 			if len(respUnits) == 0:
 				self.ids['response_units'] += 1

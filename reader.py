@@ -7,6 +7,7 @@ import os.path
 from functools import partial
 
 from classes.question import Question
+from classes.instruction import Instruction
 from classes.category import Category
 from classes.code_scheme import CodeScheme
 from classes.code import Code

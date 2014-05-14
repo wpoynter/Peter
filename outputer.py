@@ -65,7 +65,7 @@ class Outputer(object):
                 currentTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
                 for instruction in self.data['instructions']:
                         f.write('INSERT INTO instructions (id, instruction_text, created_at, updated_at) VALUES ')
-                        f.write('(' + str(instruction.ID)  + ',"' + self.prepareString(instruction.text) + '","' + str(currentTime) + '","' + str(currentTime) + '")')
+                        f.write('(' + str(instruction.ID)  + ',' + self.prepareString(instruction.text) + ',"' + str(currentTime) + '","' + str(currentTime) + '")')
                         f.write(';\n')
 		prevQuestion = None
 		for question in self.data['questions']:

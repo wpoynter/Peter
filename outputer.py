@@ -71,7 +71,7 @@ class Outputer(object):
 		for question in self.data['questions']:
 			self.ids['question_items'] += 1
                         f.write('INSERT INTO question_items (id, textid, literal, intent, created_at, updated_at, instruction_id) VALUES ')
-			f.write('(' + str(self.ids['question_items'])  + ',"qi_' + str(question.ID) + '",')
+                        f.write('(' + str(self.ids['question_items'])  + ',"qi_' + str(question.name) + '",')
 			if question.literal == None:
 				f.write(self.prepareString(question.label))
 			else:

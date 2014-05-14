@@ -22,12 +22,7 @@ class Parser(object):
 		self.root = tree.getroot()
 		""" Object arrays """
 		self.questions = []
-		self.question_items = []
-		self.question_construct = []
-		self.universes = []
-		self.conditions = []
-		self.sequences = []
-		self.statements = []
+                self.instructions = []
 		self.text_answers = []
 		self.num_answers = []
 		self.timedate_answers = []
@@ -153,6 +148,24 @@ class Parser(object):
 			else:
 				temp.append(self.code_schemes[index])
 		self.code_schemes = temp
+
+        def separateInstructions(self):
+                if not Parser.silent: print "Separating instructions from questions"
+                reuses = 0
+                for question in self.questions:
+                        if question.instruction == None: continue
+                        for instruction in self.instructions:
+                                if instruction.text == question.instruction:
+                                        instruction.uses += 1
+                                        reuses += 1
+                                        question.instruction = instruction.ID
+                                        break
+                        if type(question.instruction) is int: continue
+                        self.instructions.append(Instruction(question.instruction))
+                        question.instruction = self.instructions[-1].ID
+                if not Parser.silent: print str(len(self.instructions)) + " instructions created"
+                if not Parser.silent: print "With " + str(reuses) + " reused"
+
 
 	def validate(self):
 		if not Parser.silent: print "Validating data"

@@ -4,7 +4,6 @@ from Tkinter import *
 import tkFileDialog as fd
 
 import os
-import py2exe
 
 import app as Peter
 

@@ -64,22 +64,22 @@ class Outputer(object):
 		prevQuestion = None
 		for question in self.data['questions']:
 			self.ids['question_items'] += 1
-			f.write('INSERT INTO question_items (id, textid, literal, intent, created_at, updated_at) VALUES ')
+                        f.write('INSERT INTO question_items (id, textid, literal, intent, created_at, updated_at, instruction_id) VALUES ')
 			f.write('(' + str(self.ids['question_items'])  + ',"qi_' + str(question.ID) + '",')
 			if question.literal == None:
 				f.write(self.prepareString(question.label))
 			else:
 				f.write(self.prepareString(question.literal))
-			f.write(',' + self.prepareString(question.label) + ',"' + str(question.created_at) + '","' + str(question.updated_at) + '")')
+                        f.write(',' + self.prepareString(question.label) + ',"' + str(question.created_at) + '","' + str(question.updated_at) + '",' + str(question.instruction) + ')')
 			f.write(';\n')
 			question.sqlID = self.ids['question_items']
-			if question.instruction != None:
+                        """if question.instruction != None:
 				self.ids['cc_statements'] += 1
 				self.statement_constructs.append(StatementConstruct('s_q' + str(question.ID), question.instruction))
 				self.statement_constructs[-1].sqlID = self.ids['cc_statements']
 				f.write('INSERT INTO cc_statements (id, textid, statement_item, created_at, updated_at) VALUES ')
 				f.write('(' + str(self.statement_constructs[-1].sqlID)  + ',"' + self.statement_constructs[-1].textid + '",' + self.prepareString(self.statement_constructs[-1].statement_item) + ',"' + str(self.statement_constructs[-1].created_at) + '","' + str(self.statement_constructs[-1].updated_at) + '")')
-				f.write(';\n')
+                                f.write(';\n')"""
 			respUnits = [x for x in self.response_units if x.text == question.respUnit]
 			if len(respUnits) == 0:
 				self.ids['response_units'] += 1

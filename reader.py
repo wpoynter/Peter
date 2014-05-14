@@ -157,6 +157,8 @@ class Parser(object):
                         if question.instruction == None:
                             question.instruction = "NULL"
                             continue
+                        if question.literal == None:
+                            question.literal = question.instruction
                         for instruction in self.instructions:
                                 if instruction.text == question.instruction:
                                         instruction.uses += 1

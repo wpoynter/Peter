@@ -91,8 +91,8 @@ class Outputer(object):
 			else:
 				respUnitSqlID = respUnits[0].sqlID
 			self.ids['cc_questions'] += 1
-			f.write('INSERT INTO cc_questions (id, textid, question_item_id, response_unit_id, created_at, updated_at) VALUES ')
-			f.write('(' + str(self.ids['cc_questions'])  + ',"qc_' + str(question.ID) + '",' + str(question.sqlID)  + ',' + str(respUnitSqlID) + ',"' + str(question.created_at) + '","' + str(question.updated_at) + '")')
+                        f.write('INSERT INTO cc_questions (id, textid, question_reference_id, response_unit_id, created_at, updated_at, question_reference_type) VALUES ')
+                        f.write('(' + str(self.ids['cc_questions'])  + ',"qc_' + str(question.ID) + '",' + str(question.sqlID)  + ',' + str(respUnitSqlID) + ',"' + str(question.created_at) + '","' + str(question.updated_at) + '","QuestionItem")')
 			f.write(';\n')
 			self.question_constructs.append(QuestionConstruct('qc_' + str(question.ID), question.sqlID, respUnitSqlID))
 			self.question_constructs[-1].sqlID = self.ids['cc_questions']

@@ -154,7 +154,9 @@ class Parser(object):
                 if not Parser.silent: print "Separating instructions from questions"
                 reuses = 0
                 for question in self.questions:
-                        if question.instruction == None: continue
+                        if question.instruction == None:
+                            question.instruction = "NULL"
+                            continue
                         for instruction in self.instructions:
                                 if instruction.text == question.instruction:
                                         instruction.uses += 1

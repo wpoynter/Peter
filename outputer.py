@@ -94,7 +94,7 @@ class Outputer(object):
                         f.write('INSERT INTO cc_questions (id, textid, question_reference_id, response_unit_id, created_at, updated_at, question_reference_type) VALUES ')
                         f.write('(' + str(self.ids['cc_questions'])  + ',"qc_' + str(question.name) + '",' + str(question.sqlID)  + ',' + str(respUnitSqlID) + ',"' + str(question.created_at) + '","' + str(question.updated_at) + '","QuestionItem")')
 			f.write(';\n')
-                        self.question_constructs.append(QuestionConstruct('qc_' + str(question.name), question.sqlID, respUnitSqlID))
+                        self.question_constructs.append(QuestionConstruct(str(question.id), str(question.name), question.sqlID, respUnitSqlID))
 			self.question_constructs[-1].sqlID = self.ids['cc_questions']
 			for code_scheme in self.data['code_schemes']:
 				if code_scheme.ID == question.code_scheme_id:
@@ -172,7 +172,7 @@ class Outputer(object):
 		for question in self.question_constructs:
 			for vg_key, vg_val in self.data['variable_groups'].iteritems():
 				for memberVariable in vg_val.memberVariables:
-					if question.textid == 'qc_' + memberVariable:
+                                        if question.varid == memberVariable:
 						question.parentless = False
 						break
 				if  not question.parentless:

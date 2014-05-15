@@ -94,7 +94,7 @@ class Outputer(object):
                         f.write('INSERT INTO cc_questions (id, textid, question_reference_id, response_unit_id, created_at, updated_at, question_reference_type) VALUES ')
                         f.write('(' + str(self.ids['cc_questions'])  + ',"qc_' + str(question.name) + '",' + str(question.sqlID)  + ',' + str(respUnitSqlID) + ',"' + str(question.created_at) + '","' + str(question.updated_at) + '","QuestionItem")')
 			f.write(';\n')
-                        self.question_constructs.append(QuestionConstruct(str(question.id), str(question.name), question.sqlID, respUnitSqlID))
+                        self.question_constructs.append(QuestionConstruct(str(question.ID), str(question.name), question.sqlID, respUnitSqlID))
 			self.question_constructs[-1].sqlID = self.ids['cc_questions']
 			for code_scheme in self.data['code_schemes']:
 				if code_scheme.ID == question.code_scheme_id:
@@ -262,7 +262,7 @@ class Outputer(object):
 								break
 					for memberVariable in varGrp_val.memberVariables:
 						for question in self.question_constructs:
-							if 'qc_' + memberVariable == question.textid:
+                                                        if memberVariable == question.varid:
 								inserted = False
 								position += 1
 								for ifthenelse in self.ifthenelse_constructs:
@@ -294,7 +294,7 @@ class Outputer(object):
 									f.write(';\n')
 									break
 						for statement in self.statement_constructs:
-							if 's_q' + memberVariable == statement.textid:
+                                                        if memberVariable == statement.textid:
 								self.ids['cc_alls'] += 1
 								position += 1
 								f.write('INSERT INTO cc_alls (id, construct_type, construct_id, created_at, updated_at, parent_id, position, ifbranch) VALUES ')

@@ -13,6 +13,6 @@ class CodeScheme(object):
 		self.created_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 		self.updated_at = self.created_at
 
-        def getInsert():
-		pass
+        def cleanLabel(self, prefixLength):
+                self.label = "cs_" + self.label[prefixLength + 3:]
 

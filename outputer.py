@@ -154,7 +154,7 @@ class Outputer(object):
 						new = False
 						ifthenelse.children.append(self.question_constructs[-1].sqlID)
 				if new:
-					self.ifthenelse_constructs.append(IfthenelseConstruct('c_q'+str(prevQuestion.ID), question.universe))
+                                        self.ifthenelse_constructs.append(IfthenelseConstruct('c_q'+str(prevQuestion.name), question.universe))
 					self.ifthenelse_constructs[-1].children.append(self.question_constructs[-1].sqlID)
 			prevQuestion = question
 						

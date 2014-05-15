@@ -29,6 +29,9 @@ class Question(object):
 		if self.universe != None:
 			print "\tUniverse: " + self.universe
 
+        def cleanName(self, prefixLength):
+                self.name = self.name[:prefixLength]
+
 	class Numeric(object):
 		def __init__(self, high, low):
 			self.high = high

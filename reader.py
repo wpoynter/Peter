@@ -109,14 +109,14 @@ class Parser(object):
 				else:
 					self.categories.append(Category(labl))
 					self.code_answers[-1].category_id = self.categories[-1].ID
-				if len(filter(lambda x: x.label == 'cs_'+var.attrib['ID'], self.code_schemes)) > 0:
+                                if len(filter(lambda x: x.label == 'cs_'+var.attrib['name'], self.code_schemes)) > 0:
 					for i in range(len(self.code_schemes)):
-						if self.code_schemes[i].label == 'cs_'+var.attrib['ID']:
+                                                if self.code_schemes[i].label == 'cs_'+var.attrib['name']:
 							self.code_answers[-1].code_scheme_id = self.code_schemes[i].ID
 							self.code_schemes[i].codes.append(self.code_answers[-1])
 							break
 				else:
-					self.code_schemes.append(CodeScheme('cs_'+var.attrib['ID']))
+                                        self.code_schemes.append(CodeScheme('cs_'+var.attrib['name']))
 					self.code_answers[-1].code_scheme_id = self.code_schemes[-1].ID
 					self.code_schemes[-1].codes.append(self.code_answers[-1])
 				self.questions[-1].code_scheme_id = self.code_schemes[-1].ID
@@ -149,6 +149,20 @@ class Parser(object):
 			else:
 				temp.append(self.code_schemes[index])
 		self.code_schemes = temp
+
+                if not Parser.silent: print "Cleaning question names"
+                prefixLength = 2
+                prefix = self.questions[0].name[:prefixLength]
+                uniform = True
+                for question in self.questions:
+                        if question.name[:prefixLength] != prefix:
+                                uniform = False
+                                break
+                if uniform:
+                        for question in self.questions:
+                                question.cleanName(prefixLength)
+                        for code_scheme in self.code_schemes:
+                                code_scheme.cleanLabel(prefixLength)
 
         def separateInstructions(self):
                 if not Parser.silent: print "Separating instructions from questions"

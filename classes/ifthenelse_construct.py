@@ -14,6 +14,9 @@ class IfthenelseConstruct(object):
 		self.created_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 		self.updated_at = self.created_at
 
+        def cleanTextid(self, prefixLength):
+                self.textid = "c_" + self.textid[prefixLength + 2:]
+
 	def getLastInstace(self):
 		return self.instances[-1]
 

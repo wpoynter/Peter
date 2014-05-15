@@ -30,7 +30,7 @@ class Question(object):
 			print "\tUniverse: " + self.universe
 
         def cleanName(self, prefixLength):
-                self.name = self.name[:prefixLength]
+                self.name = self.name[prefixLength:]
 
 	class Numeric(object):
 		def __init__(self, high, low):

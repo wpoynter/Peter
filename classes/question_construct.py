@@ -4,7 +4,7 @@ import datetime
 
 class QuestionConstruct(object):
 	ID = 0
-        def __init__(self, varid, textid question_item_id, response_unit_id):
+        def __init__(self, varid, textid, question_item_id, response_unit_id):
 		QuestionConstruct.ID += 1
 		self.ID = QuestionConstruct.ID
                 self.varid = varid
